@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://mybatis.org/schema/mybatis-spring 
+	http://mybatis.org/schema/mybatis-spring.xsd">
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:database.properties</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driver}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.password}" />
+
+		<property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
+		<property name="minPoolSize" value="${c3p0.minPoolSize}" />
+		<property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
+		<property name="maxIdleTime" value="${c3p0.maxIdleTime}" />
+	</bean>
+
+
+	<!-- /**no used in this sample -->
+	<bean id="vendorProperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="properties">
+			<props>
+				<prop key="MySQL">mysql</prop>
+				<prop key="Oracle">oracle</prop>
+				<prop key="DB2">db2</prop>
+				<prop key="SQL Server">sqlserver</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="databaseIdProvider" class="org.apache.ibatis.mapping.VendorDatabaseIdProvider">
+		<property name="properties" ref="vendorProperties" />
+	</bean>
+	<!-- no used in this sample */ -->
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- xmls define mappper -->
+		<property name="mapperLocations" value="classpath*:config/mappers/**/*.xml" />
+		<property name="databaseIdProvider" ref="databaseIdProvider" />
+	</bean>
+
+<!--	<bean id="animalDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		Annotations define mappper
+		<property name="mapperInterface" value="com.keepthinker.smm.dao.AnimalDao" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+
+ 	<bean id="personDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		mapper xml define mappper
+		<property name="mapperInterface" value="com.keepthinker.smm.dao.PersonDao" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean> -->
+
+	<!-- with this configuration, you don't hava to explicit define two bean above to create two dao bean and have it autowired by service layer -->
+	<mybatis:scan base-package="com.keepthinker.smm.dao" />
+	
+	
+</beans>

@@ -4,35 +4,36 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.keepthinker.smm.entity.Animal;
-import com.keepthinker.smm.service.AnimalService;
+import com.keepthinker.smm.entity.Person;
+import com.keepthinker.smm.service.PersonService;
+
 
 @Controller
-@RequestMapping(value = "/animal")
-public class AnimalController {
-	private Logger logger = Logger.getLogger(AnimalController.class);
+@RequestMapping(value = "/person")
+public class PersonController {
+	
+	private Logger logger = Logger.getLogger(PersonController.class);
 	@Autowired
-	private AnimalService animalService;
+	private PersonService personService;
 
 	@RequestMapping(value = "/save", method = RequestMethod.GET, produces = "text/plain;charset=utf-8")
-	public @ResponseBody String save(@RequestParam String name, @RequestParam String type){
-		if(Utils.checkParamsValid(name, type) == false){
+	public @ResponseBody String save(@RequestParam String name){
+		if(Utils.checkParamsValid(name) == false){
 			logger.error("save method: params array contain null or zero-length string ");
 		}
 
 		logger.debug("params' checking is ok");
-		return "Succeeding in saving id="+String.valueOf(animalService.save(new Animal(name, type)) + " animal");
+		return "Succeeding in saving id="+String.valueOf(personService.save(new Person(name)) + " person");
 	}
 
 	@RequestMapping(value = "/get")
-	public @ResponseBody Animal get(@RequestParam String id ,HttpServletResponse response){
+	public @ResponseBody Person get(@RequestParam String id ,HttpServletResponse response){
 		if(Utils.checkParamsValid(id) == false){
 			logger.error("get method: params array contain null or zero-length string ");
 		}
@@ -47,7 +48,7 @@ public class AnimalController {
 		}
 		
 		logger.debug("params' checking is ok");
-		return animalService.find(idInt);
+		return personService.find(idInt);
 
 	}
 }

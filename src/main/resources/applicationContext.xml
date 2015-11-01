@@ -24,4 +24,5 @@
 	<mvc:resources mapping="/html/**" location="/html/" />
 	<mvc:resources mapping="/css/**" location="/css/" />
 	
+	<import resource="spring-mybatis.xml"/>
 </beans>

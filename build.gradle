@@ -12,6 +12,13 @@ apply plugin: 'eclipse'
 apply plugin: 'war'
 apply plugin: 'com.bmuschko.tomcat'
 
+eclipse {
+    classpath {    
+    	downloadSources = true
+    	downloadJavadoc = false
+    }
+}
+
 sourceCompatibility = 1.7
 version = '1.0'
 jar {
@@ -40,6 +47,9 @@ ext{
 	aspectJVersion = '1.8.7'
 	mysqlVersion = '5.1.36'
 	mybatisVersion = '3.3.0'
+	mybatisSpringVersion = '1.2.3'
+	c3p0Version = '0.9.5.1'
+	jacksonVersion = '2.6.3'
 }
 
 dependencies {
@@ -54,8 +64,15 @@ dependencies {
     compile "org.springframework:spring-aop:${springVersion}"
     compile "org.aspectj:aspectjweaver:${aspectJVersion}"
     
+    compile "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+    
     compile "mysql:mysql-connector-java:${mysqlVersion}"
     compile "org.mybatis:mybatis:${mybatisVersion}"
+    compile "org.mybatis:mybatis-spring:${mybatisSpringVersion}"
+    compile "com.mchange:c3p0:${c3p0Version}"
+    
         
     providedCompile "javax.servlet:javax.servlet-api:${servletVersion}"
     providedCompile "javax.servlet.jsp:jsp-api:${jspApiVersion}"
@@ -76,6 +93,8 @@ test {
     systemProperties 'property': 'value'
 }
 
+
+
 uploadArchives {
     repositories {
        flatDir {
@@ -83,3 +102,4 @@ uploadArchives {
        }
     }
 }
+
