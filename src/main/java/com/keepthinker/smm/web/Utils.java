@@ -1,7 +1,5 @@
 package com.keepthinker.smm.web;
 
-import org.apache.log4j.Logger;
-
 public class Utils {
 	
 	/**
