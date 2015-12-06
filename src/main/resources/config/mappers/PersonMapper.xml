@@ -3,20 +3,22 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keepthinker.smm.dao.PersonDao">
-	
+
 	<insert id="save">
 		insert into person(name) values(#{name});
 	</insert>
 
-	<!-- if every column name matchs the property name, you could remove resultMap(personResultMap) and its definition bellow-->
-	<select id="find" resultType="com.keepthinker.smm.entity.Person" resultMap="personResultMap">
+	<!-- if every column name matchs the property name, you could remove resultMap(personResultMap) 
+		and its definition bellow -->
+	<select id="find" resultType="com.keepthinker.smm.entity.Person"
+		resultMap="personResultMap">
 		select * from person where id = #{id}
 	</select>
-	
+
 	<resultMap type="com.keepthinker.smm.entity.Person" id="personResultMap">
-		<result column="id" property="id"/>
-		<result column="name" property="name"/>
+		<result column="id" property="id" />
+		<result column="name" property="name" />
 	</resultMap>
-	
+
 </mapper>
 

@@ -17,7 +17,7 @@ import com.keepthinker.smm.service.PersonService;
 @Controller
 @RequestMapping(value = "/person")
 public class PersonController {
-	
+
 	private Logger logger = Logger.getLogger(PersonController.class);
 	@Autowired
 	private PersonService personService;
@@ -28,7 +28,9 @@ public class PersonController {
 			logger.error("save method: params array contain null or zero-length string ");
 		}
 
-		logger.debug("params' checking is ok");
+		if(logger.isDebugEnabled()){
+			logger.debug("params' checking is ok");
+		}
 		return "Succeeding in saving id="+String.valueOf(personService.save(new Person(name)) + " person");
 	}
 
@@ -41,13 +43,14 @@ public class PersonController {
 		try{
 			idInt = Integer.parseInt(id);
 		}catch(NumberFormatException e){
-			logger.error("get method: id can't be parse into int");
-			logger.error(e.getMessage());
+			logger.error("get method: id can't be parse into int\n" + e.getMessage());
 			response.setStatus(404); //you may use ResponseEntity, but I think if millions of requests it will create millions of unnecessary objects
 			return null;
 		}
-		
-		logger.debug("params' checking is ok");
+
+		if(logger.isDebugEnabled()){
+			logger.debug("params' checking is ok");
+		}
 		return personService.find(idInt);
 
 	}

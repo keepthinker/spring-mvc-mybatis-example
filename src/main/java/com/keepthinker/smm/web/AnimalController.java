@@ -25,8 +25,9 @@ public class AnimalController {
 		if(Utils.checkParamsValid(name, type) == false){
 			logger.error("save method: params array contain null or zero-length string ");
 		}
-
-		logger.debug("params' checking is ok");
+		if(logger.isDebugEnabled()){
+			logger.debug("params' checking is ok");
+		}
 		return "Succeeding in saving id="+String.valueOf(animalService.save(new Animal(name, type)) + " animal");
 	}
 
@@ -39,13 +40,13 @@ public class AnimalController {
 		try{
 			idInt = Integer.parseInt(id);
 		}catch(NumberFormatException e){
-			logger.error("get method: id can't be parse into int");
-			logger.error(e.getMessage());
+			logger.error("get method: id can't be parse into int\n" + e.getMessage());
 			response.setStatus(404); //you may use ResponseEntity, but I think if millions of requests it will create millions of unnecessary objects
 			return null;
 		}
-		
-		logger.debug("params' checking is ok");
+		if(logger.isDebugEnabled()){
+			logger.debug("params' checking is ok");
+		}
 		return animalService.find(idInt);
 
 	}
