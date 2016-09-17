@@ -5,9 +5,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.keepthinker.smm.entity.Person;
@@ -22,20 +23,21 @@ public class PersonController {
 	@Autowired
 	private PersonService personService;
 
-	@RequestMapping(value = "/save", method = RequestMethod.GET, produces = "text/plain;charset=utf-8")
-	public @ResponseBody String save(@RequestParam String name){
-		if(Utils.checkParamsValid(name) == false){
+	@RequestMapping(method = RequestMethod.POST, consumes = "application/json;charset=utf-8", produces = "text/plain;charset=utf-8")
+	public @ResponseBody String save(@RequestBody Person person){
+		if(Utils.checkParamsValid(person.getName()) == false){
 			logger.error("save method: params array contain null or zero-length string ");
 		}
 
 		if(logger.isDebugEnabled()){
 			logger.debug("params' checking is ok");
 		}
-		return "Succeeding in saving id="+String.valueOf(personService.save(new Person(name)) + " person");
+		personService.save(person);
+		return "Succeeding in saving id=" + person.getId();
 	}
 
-	@RequestMapping(value = "/get")
-	public @ResponseBody Person get(@RequestParam String id ,HttpServletResponse response){
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public @ResponseBody Person get(@PathVariable String id ,HttpServletResponse response){
 		if(Utils.checkParamsValid(id) == false){
 			logger.error("get method: params array contain null or zero-length string ");
 		}

@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,19 +22,20 @@ public class AnimalController {
 	@Autowired
 	private AnimalService animalService;
 
-	@RequestMapping(value = "/save", method = RequestMethod.GET, produces = "text/plain;charset=utf-8")
-	public @ResponseBody String save(@RequestParam String name, @RequestParam String type){
-		if(Utils.checkParamsValid(name, type) == false){
+	@RequestMapping(method = RequestMethod.POST, consumes = "application/json;charset=utf-8", produces = "text/plain;charset=utf-8")
+	public @ResponseBody String save(@RequestBody Animal animal){
+		if(Utils.checkParamsValid(animal.getName(), animal.getType()) == false){
 			logger.error("save method: params array contain null or zero-length string ");
 		}
 		if(logger.isDebugEnabled()){
 			logger.debug("params' checking is ok");
 		}
-		return "Succeeding in saving id="+String.valueOf(animalService.save(new Animal(name, type)) + " animal");
+		animalService.save(animal);
+		return "Succeeding in saving id=" + animal.getId() + " animal";
 	}
 
-	@RequestMapping(value = "/get")
-	public @ResponseBody Animal get(@RequestParam String id ,HttpServletResponse response){
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public @ResponseBody Animal get(@PathVariable String id ,HttpServletResponse response){
 		if(Utils.checkParamsValid(id) == false){
 			logger.error("get method: params array contain null or zero-length string ");
 		}
@@ -47,7 +50,9 @@ public class AnimalController {
 		if(logger.isDebugEnabled()){
 			logger.debug("params' checking is ok");
 		}
-		return animalService.find(idInt);
+		Animal animal = animalService.find(idInt);
+		logger.debug(animal);
+		return animal;
 
 	}
 }
